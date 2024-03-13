@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using Pizzeria.Models;
 
 namespace Pizzeria.Controllers
@@ -15,6 +16,8 @@ namespace Pizzeria.Controllers
         private DBContext db = new DBContext();
 
         // GET: Ordini
+        [Authorize(Roles = "Amministratore")]
+
         public ActionResult Index()
         {
             var ordini = db.Ordini.Include(o => o.Users);
@@ -22,21 +25,25 @@ namespace Pizzeria.Controllers
         }
 
         // GET: Ordini/Details/5
+        [Authorize(Roles = "Cliente,Amministratore")]
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Ordini ordini = db.Ordini.Find(id);
-            if (ordini == null)
+            var idInt = Convert.ToInt32(id);
+            var order = db.Ordini
+                .Where(o => o.User_ID == idInt).ToList();
+            if (order == null)
             {
                 return HttpNotFound();
             }
-            return View(ordini);
+            return View(order);
         }
 
         // GET: Ordini/Create
+        [Authorize(Roles = "Cliente,Amministratore")]
         public ActionResult Create()
         {
             ViewBag.User_ID = new SelectList(db.Users, "User_ID", "Nome");
@@ -47,6 +54,7 @@ namespace Pizzeria.Controllers
         // Per la protezione da attacchi di overposting, abilitare le proprietà a cui eseguire il binding. 
         // Per altri dettagli, vedere https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "Cliente,Amministratore")]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Ordine_ID,Indirizzo,Note,CostoCons,User_ID")] Ordini ordini)
         {
@@ -62,6 +70,7 @@ namespace Pizzeria.Controllers
         }
 
         // GET: Ordini/Edit/5
+        [Authorize(Roles = "Amministratore")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -82,6 +91,8 @@ namespace Pizzeria.Controllers
         // Per altri dettagli, vedere https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Amministratore")]
+
         public ActionResult Edit([Bind(Include = "Ordine_ID,Indirizzo,Note,CostoCons,User_ID")] Ordini ordini)
         {
             if (ModelState.IsValid)
@@ -95,6 +106,7 @@ namespace Pizzeria.Controllers
         }
 
         // GET: Ordini/Delete/5
+        [Authorize(Roles = "Amministratore")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -111,6 +123,7 @@ namespace Pizzeria.Controllers
 
         // POST: Ordini/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Amministratore")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
