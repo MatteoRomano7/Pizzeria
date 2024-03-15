@@ -188,23 +188,18 @@ namespace Pizzeria.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CreateOrderFromCart(Ordini ordArt)
         {
+
             if (ModelState.IsValid)
             {
 
-
                 ordArt.CostoCons = 4;
-                ordArt.Stato = "Preparazione";
-                ordArt.Data = DateTime.Today;
+                ordArt.User_ID = Convert.ToInt32(User.Identity.Name);
+
                 var cartJson = HttpUtility.UrlDecode(Request.Cookies["Carrello" + User.Identity.Name]["User"]);
                 var userId = Convert.ToInt32(User.Identity.Name);
 
-                // Decodifica il valore del cookie e riempie la lista
                 var artsCart = JsonConvert.DeserializeObject<List<ArtCart>>(cartJson);
-
-
-                List<ArtCart> userArtCart = new List<ArtCart>();
-                // Filtra solo gli articoli relativi all'utente attuale
-                userArtCart = artsCart.Where(a => a.User_Id == userId).ToList();
+                var userArtCart = artsCart.Where(a => a.User_Id == userId).ToList();
 
                 decimal totale = 0;
 
@@ -214,28 +209,25 @@ namespace Pizzeria.Controllers
                 }
                 ordArt.Totale = totale;
 
-                ordArt.User_ID = Convert.ToInt32(User.Identity.Name);
+                ordArt.Stato = "Preparazione";
+                ordArt.Data = DateTime.Today;
+
                 db.Ordini.Add(ordArt);
                 db.SaveChanges();
 
                 int newOrdineID = ordArt.Ordine_ID;
 
-
-                ViewBag.UserCart = userArtCart;
-
-
                 foreach (var art in userArtCart)
                 {
-                    var newOrdArt = new OrdArt();  // Create a new instance of OrdArt for each ArtCart item
+                    var newOrdArt = new OrdArt();
                     newOrdArt.Articolo_ID = art.Articolo.Articolo_ID;
                     newOrdArt.Ordine_ID = newOrdineID;
                     newOrdArt.Quantita = Convert.ToInt32(art.Quantita);
-                    db.OrdArt.Add(newOrdArt);  // Add the new instance to the database context
+                    db.OrdArt.Add(newOrdArt);
                 }
 
                 db.SaveChanges();
 
-                // Rimuovi il cookie del carrello per l'utente corrente
                 HttpCookie userCookie = Request.Cookies["Carrello" + User.Identity.Name];
                 if (userCookie != null)
                 {
@@ -244,9 +236,21 @@ namespace Pizzeria.Controllers
                 }
 
                 return RedirectToAction("Details", "OrdArts", new { id = newOrdineID });
-            }
-            return RedirectToAction("Cart");
 
+            }
+            else
+            {
+                // Se il modello non Ã¨ valido, visualizza gli errori di validazione
+                foreach (var modelError in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    // Puoi fare qualcosa con gli errori di validazione, ad esempio stamparli nel log o visualizzarli nell'interfaccia utente
+                    // Esempio di stampa nel log:
+                    System.Diagnostics.Debug.WriteLine(modelError.ErrorMessage);
+                }
+
+                // Puoi gestire gli errori di validazione qui, ad esempio restituendo la vista con un messaggio di errore
+                return RedirectToAction("Cart");
+            }
         }
 
         [HttpPost]
