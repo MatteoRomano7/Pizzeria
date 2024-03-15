@@ -45,7 +45,7 @@ namespace Pizzeria.Models
             return userRoles;
             //string role = db.Users.Where(u => u.User_ID.ToString() == userId).FirstOrDefault().Ruolo;
             //string[] roles = new string[] { role };
-            //return roles;
+            //return roles; versione accorciata di sopra
         }
 
         public override string[] GetUsersInRole(string roleName)

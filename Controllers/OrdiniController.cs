@@ -6,7 +6,6 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Security;
 using Pizzeria.Models;
 
 namespace Pizzeria.Controllers
@@ -17,10 +16,9 @@ namespace Pizzeria.Controllers
 
         // GET: Ordini
         [Authorize(Roles = "Amministratore")]
-
         public ActionResult Index()
         {
-            var ordini = db.Ordini.Include(o => o.Users);
+            var ordini = db.Ordini.Include(o => o.Users).OrderByDescending(o => o.Ordine_ID);
             return View(ordini.ToList());
         }
 
@@ -34,7 +32,10 @@ namespace Pizzeria.Controllers
             }
             var idInt = Convert.ToInt32(id);
             var order = db.Ordini
-                .Where(o => o.User_ID == idInt).ToList();
+                .Where(o => o.User_ID == idInt)
+                .OrderByDescending(o => o.Ordine_ID)
+                .ToList();
+
             if (order == null)
             {
                 return HttpNotFound();
@@ -46,7 +47,19 @@ namespace Pizzeria.Controllers
         [Authorize(Roles = "Cliente,Amministratore")]
         public ActionResult Create()
         {
-            ViewBag.User_ID = new SelectList(db.Users, "User_ID", "Nome");
+            if (User.IsInRole("Cliente"))
+            {
+                ViewBag.User_ID = User.Identity.Name;
+            }
+            else if (User.IsInRole("Amministratore"))
+            {
+                ViewBag.User_ID = new SelectList(db.Users, "User_ID", "Nome");
+            }
+
+
+            ViewBag.Articolo_ID = new SelectList(db.Articoli, "Articolo_ID", "Nome");
+            ViewBag.Ordine_ID = new SelectList(db.Ordini, "Ordine_ID", "Indirizzo");
+
             return View();
         }
 
@@ -54,19 +67,24 @@ namespace Pizzeria.Controllers
         // Per la protezione da attacchi di overposting, abilitare le proprietà a cui eseguire il binding. 
         // Per altri dettagli, vedere https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [Authorize(Roles = "Cliente,Amministratore")]
+        [Authorize(Roles = "Cliente, Amministratore")]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Ordine_ID,Indirizzo,Note,CostoCons,User_ID")] Ordini ordini)
+        public ActionResult Create(OrdArt ordArt)
         {
             if (ModelState.IsValid)
             {
-                db.Ordini.Add(ordini);
+                db.Ordini.Add(ordArt.Ordini);
                 db.SaveChanges();
-                return RedirectToAction("Index");
-            }
 
-            ViewBag.User_ID = new SelectList(db.Users, "User_ID", "Nome", ordini.User_ID);
-            return View(ordini);
+                int newOrdineID = ordArt.Ordini.Ordine_ID;
+                ordArt.Ordine_ID = newOrdineID;
+
+                db.OrdArt.Add(ordArt);
+                db.SaveChanges();
+
+                return RedirectToAction("Details", "OrdArt", new { id = newOrdineID });
+            }
+            return View(ordArt);
         }
 
         // GET: Ordini/Edit/5
@@ -93,7 +111,7 @@ namespace Pizzeria.Controllers
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Amministratore")]
 
-        public ActionResult Edit([Bind(Include = "Ordine_ID,Indirizzo,Note,CostoCons,User_ID")] Ordini ordini)
+        public ActionResult Edit([Bind(Include = "Ordine_ID,Indirizzo,Note,Data,Stato,Totale,CostoCons,User_ID")] Ordini ordini)
         {
             if (ModelState.IsValid)
             {
@@ -101,7 +119,6 @@ namespace Pizzeria.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.User_ID = new SelectList(db.Users, "User_ID", "Nome", ordini.User_ID);
             return View(ordini);
         }
 

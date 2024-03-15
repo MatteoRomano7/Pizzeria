@@ -10,7 +10,6 @@ namespace Pizzeria.Controllers
 {
     public class AuthController : Controller
     {
-        // GET: Auth
         DBContext db = new DBContext();
         public ActionResult Login()
         {
@@ -31,14 +30,10 @@ namespace Pizzeria.Controllers
             FormsAuthentication.SetAuthCookie(loggedUser.User_ID.ToString(), true);
             return RedirectToAction("Index", "Home");
         }
-
-
-
         public ActionResult Logout()
         {
             FormsAuthentication.SignOut();
             return RedirectToAction("Login");
         }
-
     }
 }

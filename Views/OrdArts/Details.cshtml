@@ -1,4 +1,4 @@
-﻿@model List<Pizzeria.Models.OrdArt>
+﻿﻿@model List<Pizzeria.Models.OrdArt>
 
 @{
     ViewBag.Title = "Dettagli Ordine";
@@ -32,6 +32,7 @@
                     <td>@item.Articoli.Nome</td>
                     <td>@item.Quantita</td>
                     <td>@item.Articoli.Prezzo</td>
+                    <td><a href="/OrdArts/Edit/@item.Articolo_ID/@item.Ordine_ID" class="btn btn-outline-info"></a></td>
                 </tr>
             }
             <tr>

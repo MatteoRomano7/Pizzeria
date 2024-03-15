@@ -21,7 +21,6 @@ namespace Pizzeria.Controllers
         }
 
         // GET: Articoli/Details/5
-
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -38,7 +37,6 @@ namespace Pizzeria.Controllers
 
         // GET: Articoli/Create
         [Authorize(Roles = "Amministratore")]
-
         public ActionResult Create()
         {
             return View();
@@ -50,7 +48,6 @@ namespace Pizzeria.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Amministratore")]
-
         public ActionResult Create([Bind(Include = "Articolo_ID,Nome,Img,Prezzo,Tempo_Cons,Ingredienti")] Articoli articoli)
         {
             if (ModelState.IsValid)
@@ -65,12 +62,10 @@ namespace Pizzeria.Controllers
 
         // GET: Articoli/Edit/5
         [Authorize(Roles = "Amministratore")]
-
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
-                
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Articoli articoli = db.Articoli.Find(id);

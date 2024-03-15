@@ -1,17 +1,17 @@
-﻿@model List<Pizzeria.Models.Ordini>
+﻿﻿@model List<Pizzeria.Models.Ordini>
 
 @{
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<h2>Storico Ordini</h2>
 
 @foreach (var order in Model)
 {
     <div>
-        <h4 class=" fw-bold">Ordine:  @Html.DisplayFor(model => order.Ordine_ID)</h4>
+        <h4>Ordine:  @Html.DisplayFor(model => order.Ordine_ID)</h4>
         <hr />
-        <dl class="dl-horizontal text-center">
+        <dl class="dl-horizontal">
             <dt>
                 @Html.DisplayNameFor(model => order.Users.Nome)
             </dt>
@@ -46,10 +46,7 @@
 
         </dl>
     </div>
-    <div text-center>
-        <a href="/OrdArts/Details/@order.Ordine_ID" class=" btn btn-outline-info text-center">Prodotti Acquistati</a>
+    <div class="mb-5">
+        <a href="/OrdArt/Details/@order.Ordine_ID" class="btn btn-outline-info">Prodotti acquistati</a>
     </div>
-        
-    
-
 }

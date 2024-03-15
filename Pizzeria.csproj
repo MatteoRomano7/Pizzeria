@@ -189,6 +189,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ArtCart.cs" />
     <Compile Include="Models\Articoli.cs" />
     <Compile Include="Models\DBContext.cs" />
     <Compile Include="Models\OrdArt.cs" />
@@ -280,7 +281,7 @@
     <Content Include="Views\OrdArts\Create.cshtml" />
     <Content Include="Views\OrdArts\Delete.cshtml" />
     <Content Include="Views\OrdArts\Details.cshtml" />
-    <Content Include="Views\OrdArts\Edit.cshtml" />
+    <Content Include="Views\OrdArts\Cart.cshtml" />
     <Content Include="Views\OrdArts\Index.cshtml" />
     <Content Include="Views\Auth\Login.cshtml" />
   </ItemGroup>

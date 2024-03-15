@@ -4,16 +4,20 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title - Applicazione ASP.NET</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="https://image.similarpng.com/very-thumbnail/2021/12/Pizza-logo-isolated-on-transparent-background-PNG.png" type="image/x-icon">
+    <title>@ViewBag.Title - Pizzeria Primavera</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-***" crossorigin="anonymous" />
+
+
+   
 </head>
 <body>
-
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
         <div class="container">
-            @Html.ActionLink("Nome dell'applicazione", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            @Html.ActionLink("PRIMAVERA", "Index", "Home", new { area = "" }, new { @class = "navbar-brand fw-bold" })
             <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Attiva/Disattiva spostamento" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -22,38 +26,55 @@
                 <ul class="navbar-nav flex-grow-1">
                     @if (User.IsInRole("Amministratore"))
                     {
-                        <li>@Html.ActionLink("Ordini", "Index", "Ordini", new { area = "" }, new { @class = "nav-link" })</li>
-                        <li>@Html.ActionLink("Articoli", "Index", "Articoli", new { area = "" }, new { @class = "nav-link" })</li>
-
+                        <li class="nav-item">@Html.ActionLink("Ordini", "Index", "Ordini", new { area = "" }, new { @class = "nav-link mx-2" })</li>
+                        <li class="nav-item">@Html.ActionLink("Articoli", "Index", "Articoli", new { area = "" }, new { @class = "nav-link" })</li>
                     }
                     else if (User.IsInRole("Cliente"))
-                    {
-                        <li>@Html.ActionLink("Crea Ordine", "Create", "Ordini", new { area = "" }, new { @class = "nav-link" })</li>
-                        <li>@Html.ActionLink("I tuoi ordini", "Details", "Ordini", new { id = User.Identity.Name }, new { @class = "nav-link" })</li>
+                    {                        
+                        <li class="nav-item">@Html.ActionLink("Storico", "Details", "Ordini", new { id = User.Identity.Name }, new { @class = "nav-link me-2" })</li>
+                        <li class="nav-item">@Html.ActionLink("Carrello", "Cart", "OrdArts", new { area = "" }, new { @class = "nav-link" })</li>
                     }
                 </ul>
-                @if (User.IsInRole("Amministratore"))
-            {
-                <p class=" text-bg-warning fw-bold"> AMMINISTRATORE</p>
-            }
-                <ul class="text-white">
+                <ul class="navbar-nav ml-auto">
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <li>@Html.ActionLink("Logout", "Logout", "Auth", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li class="nav-item">
+                            <button type="button" class="btn btn-success fw-bold btnav" onclick="location.href='@Url.Action("Logout", "Auth")'">Logout</button>
+                        </li>
                     }
                     else
                     {
-                        <li>@Html.ActionLink("Login", "Login", "Auth", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li class="nav-item">
+                            <button type="button" class="btn btn-success fw-bold btnav" onclick="location.href='@Url.Action("Login", "Auth")'">Login</button>
+                        </li>
                     }
                 </ul>
             </div>
         </div>
     </nav>
+
     <div class="container body-content">
         @RenderBody()
         <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Applicazione ASP.NET</p>
+        <footer class="mt-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h5>Contatti</h5>
+                        <p>Piazza Primavera, 25</p>
+                        <p>Telefono: 0818888888</p>
+                        <p>Email: primavera@pizzeria.com</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h5>Orari</h5>
+                        <p>Martedì - Domenica: 12:30 - 14:00 / 19:30 - 22:00</p>
+                    </div>                 
+                </div>
+                <hr class="bg-white" />
+                <div class="text-center">
+                    <p>@DateTime.Now.Year - <b>Primavera &reg;</b></p>
+                </div>
+            </div>
         </footer>
     </div>
 
