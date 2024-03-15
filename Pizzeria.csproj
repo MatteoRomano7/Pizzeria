@@ -286,6 +286,7 @@
     <Content Include="Views\OrdArts\Index.cshtml" />
     <Content Include="Views\Auth\Login.cshtml" />
     <Content Include="Views\Admin\TotaleIncassato.cshtml" />
+    <Content Include="Views\Admin\OrdiniEvasi.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

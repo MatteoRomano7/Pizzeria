@@ -27,7 +27,8 @@
                     @if (User.IsInRole("Amministratore"))
                     {
                         <li class="nav-item">@Html.ActionLink("Ordini", "Index", "Ordini", new { area = "" }, new { @class = "nav-link mx-2" })</li>
-                        <li class="nav-item">@Html.ActionLink("Articoli", "Index", "Articoli", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li class="nav-item">@Html.ActionLink("Ordini Evasi", "OrdiniEvasi", "Admin", new { area = "" }, new { @class = "nav-link mx-2" })</li>
+                        <li class="nav-item">@Html.ActionLink("Totale Incassato", "TotaleIncassato", "Admin", new { area = "" }, new { @class = "nav-link" })</li>
                     }
                     else if (User.IsInRole("Cliente"))
                     {                        
